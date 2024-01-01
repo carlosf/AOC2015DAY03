@@ -48,14 +48,23 @@ func getNewHouse(h House, m string) House {
 
 func main() {
 	p("Starting...")
-	var currHouse House
-	var nextHouse House
+	var currHouseSanta House
+	var currHouseRoboSanta House
+	var nextHouseSanta House
+	var nextHouseRoboSanta House
 	var iter int = 0
-	currHouse.x = 0
-	currHouse.y = 0
+	currHouseSanta.x = 0
+	currHouseSanta.y = 0
+	currHouseRoboSanta.x = 0
+	currHouseRoboSanta.y = 0
 
 	//HousesVisited contains a list of houses visited and the number of times they were visited.
-	var HousesVisited = make(map[House]int)
+	var HousesVisitedSanta = make(map[House]int)
+	var HousesVisitedRoboSanta = make(map[House]int)
+
+	//Set start position of Santa & RoboSanta
+	HousesVisitedSanta[currHouseSanta]++
+	HousesVisitedRoboSanta[currHouseRoboSanta]++
 
 	//Open input.txt file
 	f, err := os.Open("input.txt")
@@ -70,10 +79,23 @@ func main() {
 			break
 		}
 		iter++
-		p(string(char))
-		nextHouse = getNewHouse(currHouse, string(char))
-		HousesVisited[nextHouse]++
-		currHouse = nextHouse
+		//Santa move
+		if iter%2 != 0 {
+			//	p(string(char))
+			nextHouseSanta = getNewHouse(currHouseSanta, string(char))
+			HousesVisitedSanta[nextHouseSanta]++
+			currHouseSanta = nextHouseSanta
+		} else { //RoboSanta move
+			//	p(string(char))
+			nextHouseRoboSanta = getNewHouse(currHouseRoboSanta, string(char))
+			HousesVisitedRoboSanta[nextHouseRoboSanta]++
+			currHouseRoboSanta = nextHouseRoboSanta
+		}
+
 	}
-	fmt.Printf("Total houses visited: %d\n", (len(HousesVisited)))
+	//merge the two maps
+	for k, v := range HousesVisitedRoboSanta {
+		HousesVisitedSanta[k] += v
+	}
+	fmt.Printf("Total houses visited: %d\n", (len(HousesVisitedSanta)))
 }
