@@ -2,8 +2,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io/ioutil"
+	"os"
 )
 
 func check(e error) {
@@ -48,12 +49,31 @@ func getNewHouse(h House, m string) House {
 func main() {
 	p("Starting...")
 	var currHouse House
+	var nextHouse House
+	var iter int = 0
 	currHouse.x = 0
 	currHouse.y = 0
 
-	// Read the input file.
-	dat, err := ioutil.ReadFile("input.txt")
+	//HousesVisited contains a list of houses visited and the number of times they were visited.
+	var HousesVisited = make(map[House]int)
+
+	//Open input.txt file
+	f, err := os.Open("input.txt")
 	check(err)
 
-	currHouse = getNewHouse(currHouse, "v")
+	defer f.Close()
+
+	reader := bufio.NewReader(f)
+	for {
+		char, err := reader.ReadByte()
+		if err != nil {
+			break
+		}
+		iter++
+		p(string(char))
+		nextHouse = getNewHouse(currHouse, string(char))
+		HousesVisited[nextHouse]++
+		currHouse = nextHouse
+	}
+	fmt.Printf("Total houses visited: %d\n", (len(HousesVisited)))
 }

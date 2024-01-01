@@ -15,7 +15,11 @@ func Test_getNewHouse(t *testing.T) {
 		args args
 		want House
 	}{
-		// TODO: Add test cases.
+		//
+		{"Go up", args{House{0, 0}, "^"}, House{0, 1}},
+		{"Go down", args{House{0, 0}, "v"}, House{0, -1}},
+		{"Go left", args{House{0, 0}, "<"}, House{-1, 0}},
+		{"Go right", args{House{0, 0}, ">"}, House{1, 0}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
